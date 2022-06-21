@@ -1,74 +1,81 @@
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu } from 'antd';
-import React from 'react';
-import Table from './Table'
-const { Header, Content, Sider } = Layout;
-const items1 = ['1', '2', '3'].map((key) => ({
-    key,
-    label: `nav ${key}`,
-}));
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-    const key = String(index + 1);
-    return {
-        key: `sub${key}`,
-        icon: React.createElement(icon),
-        label: `subnav ${key}`,
-        children: new Array(4).fill(null).map((_, j) => {
-            const subKey = index * 4 + j + 1;
-            return {
-                key: subKey,
-                label: `option${subKey}`,
-            };
-        }),
+import React, { useEffect, useRef, useState } from "react";
+import { Form, Input, Button, notification } from 'antd';
+
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default () => {
+    const [loading, setLoading] = useState(false)
+    const forgotFormRef = useRef()
+
+    const onFinish = (values) => {
+        setLoading(true)
     };
-});
 
-const App = () => (
-    <Layout>
-        <Header className="header">
-            <div className="logo" />
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items1} />
-        </Header>
-        <Layout>
-            <Sider width={200} className="site-layout-background">
-                <Menu
-                    mode="inline"
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    style={{
-                        height: '100%',
-                        borderRight: 0,
-                    }}
-                    items={items2}
-                />
-            </Sider>
-            <Layout
-                style={{
-                    padding: '0 24px 24px',
-                }}
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+    useEffect(() => {
+       
+    }, [])
+   
+    return (
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            flexDirection: 'column'
+
+        }}>
+            <div style={{
+                marginBottom: '44px'
+            }} >
+                <img src={'https://s2.coinmarketcap.com/static/img/coins/200x200/13045.png'} />
+            </div>
+            <Form
+                name="basic"
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                autoComplete="off"
             >
-                <Breadcrumb
-                    style={{
-                        margin: '16px 0',
-                    }}
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[{ required: true, message: 'Please input your username!' }]}
                 >
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    <Breadcrumb.Item>App</Breadcrumb.Item>
-                </Breadcrumb>
-                <Content
-                    className="site-layout-background"
-                    style={{
-                        padding: 24,
-                        margin: 0,
-                        minHeight: 280,
-                    }}
-                >
-                    <Table />
-                </Content>
-            </Layout>
-        </Layout>
-    </Layout>
-);
+                    <Input />
+                </Form.Item>
 
-export default App;
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[{ required: true, message: 'Please input your password!' }]}
+                >
+                    <Input.Password />
+                </Form.Item>
+                <Form.Item>
+                    {/* <Form.Item style={{ opacity: 0 }} name="remember" valuePropName="checked" noStyle>
+                        <Checkbox>Remember me</Checkbox>
+                    </Form.Item> */}
+
+                    <a
+                        onClick={() => forgotFormRef?.current?.show()}
+                        style={{
+                            float: 'right'
+                        }}
+                        href="javascript:void(0)">
+                        Forgot password
+                    </a>
+                </Form.Item>
+                <Form.Item>
+                    <Button loading={loading} type="primary" htmlType="submit" style={{
+                        width: '100%'
+                    }}>
+                        Login
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>
+    )
+}   
