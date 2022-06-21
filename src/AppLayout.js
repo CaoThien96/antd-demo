@@ -40,7 +40,7 @@ export default () => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Username"
+                    label="ANTD"
                     name="username"
                     rules={[{ required: true, message: 'Please input your username!' }]}
                 >
